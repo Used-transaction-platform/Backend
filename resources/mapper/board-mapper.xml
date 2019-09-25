@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+						"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.kalriz.checkmate.app.dao.BoardDAO">
+	<select id="getRecentBoard" resultType="me.kalriz.checkmate.app.model.BoardModel">
+		select * from board order by board_id desc limit 1
+	</select>
+	<select id="getRecentBoardID" resultType="integer">
+		select board_id from board order by board_id desc limit 1
+	</select>
+	
+	<select id="getBoardByID" resultType="me.kalriz.checkmate.app.model.BoardModel">
+		select * from board where board_id=#{board_id}
+	</select>
+	<select id="getBoardByAccountID" resultType="me.kalriz.checkmate.app.model.BoardModel">
+		select * from board inner join account_board using(board_id) where account_id=#{account_id}
+	</select>
+	<select id="getBoardByBuyerID" resultType="me.kalriz.checkmate.app.model.BoardModel">
+		select * from board where buyer=#{buyer}
+	</select>
+	<select id="getBoardByTitle" resultType="me.kalriz.checkmate.app.model.BoardModel">
+		select * from board where title like concat('%',#{title},'%')
+	</select>
+	<select id="getAccountIdByBoardID" resultType="integer">
+		select account_id from account_board where board_id=#{board_id}
+	</select>
+	<select id="getBoardContractIDList" resultType="string">
+		select contract_id from board;
+	</select>
+	<select id="getReportTotalCount" resultType="integer">
+		select count(*) from board where state=5;
+	</select>
+	<select id="getReportBoard" resultType="me.kalriz.checkmate.app.model.BoardModel">
+		select * from board where state=5;
+	</select>
+	<select id="getReportBoardByID" resultType="me.kalriz.checkmate.app.model.BoardModel">
+		select board_id, createat, title, contents, state, price, buyer, contract_id from account inner join board where email=#{email} and state=5;
+	</select>
+	<select id="getBoardContractIDInfoList" resultType="me.kalriz.checkmate.app.params.ResBoardContractIDInfo">
+		select account_id, contract_id from board join account_board on account_board.board_id=board.board_id;
+	</select>
+	
+	<insert id="newBoard">
+		insert into board(createat, title, contents, price, contract_id) values(now(), #{title}, #{contents}, #{price}, #{contract_id})
+	</insert>
+	<insert id="newAccountBoard">
+		insert into account_board(board_id, account_id) values(#{board_id}, #{account_id})
+	</insert>
+	
+	<update id="updateBoardState">
+		update board set state = #{state} where board_id=#{board_id}
+	</update>
+	<update id="updateBoardBuyer">
+		update board set buyer = #{buyer} where board_id=#{board_id}
+	</update>
+</mapper>

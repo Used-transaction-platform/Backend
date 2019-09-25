@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+						"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.kalriz.checkmate.app.dao.AccountDAO">
+	<select id="getAccountByEmail" resultType="me.kalriz.checkmate.app.model.AccountModel">
+		select * from account where email=#{email}
+	</select>
+	<select id="getAccountByID" resultType="me.kalriz.checkmate.app.model.AccountModel">
+		select * from account where account_id=#{account_id}
+	</select>
+	<insert id="newAccount">
+		insert into account(email, passwd, eth_id, phone) values(#{email}, #{passwd}, #{eth_id}, #{phone})
+	</insert>
+</mapper>
